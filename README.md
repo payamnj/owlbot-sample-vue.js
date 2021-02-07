@@ -1,5 +1,15 @@
 # Sample Vue.js component for OwlBot dictionary
 
+## Using the component
+```
+<script src="https://unpkg.com/vue"></script>
+<script src=".dist/owlbot-form.js"></script>
+
+<owlbot-form token="<YOUR_API_TOKEN>"></owlbot-form>
+```
+
+## Deveolopment Project setup
+
 Add your API token to .env file in the root folder. you can get a token from https://owlbot.info.
 
 ```
@@ -7,7 +17,7 @@ Add your API token to .env file in the root folder. you can get a token from htt
 VUE_APP_TOKEN=<YourToken>
 ```
 
-## Project setup
+
 ```
 npm install
 ```
