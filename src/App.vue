@@ -5,7 +5,8 @@
       <div class="btn" :class="{ active: isActive('u-i-view') }" @click="switchTo('u-i-view')">Web view</div>
       <div class="btn" :class="{ active: isActive('json-response') }" @click="switchTo('json-response')">Json response</div>
     </div>
-      <component :is="currentTabComponent" :response="client.data" class='component-container' :style="{ 'max-height': displayHeight - 215 + 'px' }"></component>
+      <component :is="currentTabComponent" :response="client.data" class='component-container' :style="{ 'max-height': displayHeight - 215 + 'px' }" v-show="!error"></component>
+      <div class="error" v-show="error">{{ error }}</div>
   </div>
 </template>
 
@@ -23,9 +24,10 @@ export default {
   data: function() {
     return {
       visible: false,
-      token: "<Get a token from https://owlbot.info>",
       client: null,
-      currentTabComponent: 'u-i-view'
+      currentTabComponent: 'u-i-view',
+      word: null,
+      error: null
     };
   },
   props: {
@@ -33,19 +35,29 @@ export default {
       type: Number,
       default: 600
     },
-    word: {
+    initialWord: {
       type: String,
       default: 'pineapple'
+    },
+    token: {
+      type: String,
+      default: process.env.VUE_APP_TOKEN
     }
   },
   mounted: function() {
     this.visible = true;
     this.client = OwlBot(this.token);
+    this.word = this.initialWord;
     this.callApi();
   },
   methods: {
-    callApi: function() {
-      this.client.define(this.word).then(function(){});
+    callApi: async function() {
+      try {
+        await this.client.define(this.word);
+        this.error = null;
+      } catch(err) {
+        this.error = err;
+      }
     },
     isActive: function(component) {
       if (component == this.currentTabComponent) {
@@ -65,6 +77,10 @@ export default {
 .mobile-ui-top {
   padding-top: 85px;
   text-align: center;
+}
+
+.error {
+  padding: 30px;
 }
 
 .word-input {
